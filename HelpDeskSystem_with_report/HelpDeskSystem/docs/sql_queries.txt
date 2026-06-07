@@ -1,0 +1,47 @@
+Наиболее востребованные SQL-запросы проекта
+
+1. Получение списка заявок с пользователями и отделами:
+
+SELECT r.id, r.title, r.priority, r.status, r.created_at,
+       u.full_name AS user_name, d.name AS department
+FROM requests r
+JOIN users u ON u.id = r.user_id
+JOIN departments d ON d.id = u.department_id
+ORDER BY r.id DESC;
+
+2. Фильтрация заявок по статусу:
+
+SELECT *
+FROM requests
+WHERE status = 'Новая';
+
+3. Поиск заявки по теме, описанию или ФИО пользователя:
+
+SELECT r.id, r.title, r.description, u.full_name
+FROM requests r
+JOIN users u ON u.id = r.user_id
+WHERE r.title LIKE '%почта%'
+   OR r.description LIKE '%почта%'
+   OR u.full_name LIKE '%почта%';
+
+4. Получение истории назначений:
+
+SELECT a.id, r.title AS request_title, e.full_name AS engineer_name,
+       a.assign_date, a.comment
+FROM assignments a
+JOIN requests r ON r.id = a.request_id
+JOIN engineers e ON e.id = a.engineer_id
+ORDER BY a.id DESC;
+
+5. Статистика заявок по статусам:
+
+SELECT status, COUNT(*) AS count
+FROM requests
+GROUP BY status
+ORDER BY count DESC;
+
+6. Изменение статуса заявки:
+
+UPDATE requests
+SET status = 'Закрыта'
+WHERE id = 1;
